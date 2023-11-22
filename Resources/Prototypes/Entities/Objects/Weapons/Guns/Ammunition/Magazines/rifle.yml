@@ -81,7 +81,7 @@
   parent: BaseMagazineRifle
   components:
   - type: BallisticAmmoProvider
-    proto: CartridgeRifleincendiary
+    proto: CartridgeRifleIncendiary
   - type: Sprite
     layers:
     - state: incendiary
