@@ -12,15 +12,15 @@
         },
         {
             "name": "equipped-OUTERCLOTHING",
-            "directions": 4
+            "directions": 0
         },
         {
             "name": "inhand-left",
-            "directions": 4
+            "directions": 3
         },
         {
             "name": "inhand-right",
-            "directions": 4
+            "directions": 3
         }
     ]
 }
