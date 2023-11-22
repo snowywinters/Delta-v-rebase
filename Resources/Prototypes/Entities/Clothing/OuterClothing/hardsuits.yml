@@ -894,6 +894,4 @@
   - type: ClothingSpeedModifier
     walkModifier: 0.0
     sprintModifier: 0.0
-  - type: ToggleableClothing
-    clothingPrototype: ClothingHeadHelmetHardsuitnano
 
