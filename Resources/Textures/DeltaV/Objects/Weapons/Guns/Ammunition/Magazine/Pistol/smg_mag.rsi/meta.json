@@ -37,6 +37,8 @@
         {
             "name": "mag-5"
         },
-        {   "name": "incendiary"}
+        {
+            "name": "incendiary"
+        }
     ]
 }
