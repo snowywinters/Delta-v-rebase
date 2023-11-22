@@ -62,11 +62,3 @@
       emergencyLightColor: DarkViolet
       forceEnableEmergencyLights: true
       shuttleTime: 1200
-    omaga:
-     announcement: alert-level-omaga-announcement
-     selectable: false
-     disableselection: true
-     color: bloodred
-     emergencylightcolor: bloodred
-     forceEnableEmergencyLights: true
-     shuttleTime: 1200
