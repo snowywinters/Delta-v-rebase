@@ -21,7 +21,7 @@
     containers:
       ballistic-ammo: !type:Container
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/light_rifle_mag.rsi
+    sprite: DeltaV/Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/light_rifle_mag.rsi
     layers:
     - state: base
       map: ["enum.GunVisualLayers.Base"]
@@ -47,7 +47,7 @@
     capacity: 100
   - type: Item
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/light_rifle_box.rsi
+    sprite: DeltaV/Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/light_rifle_box.rsi
   - type: MagazineVisuals
     magState: mag
     steps: 8
@@ -122,7 +122,7 @@
     proto: CartridgeLightRifle
     capacity: 96
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/maxim.rsi
+    sprite: DeltaV/Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/maxim.rsi
 
 - type: entity
   id: MagazineLightRiflePkBox
@@ -136,7 +136,7 @@
     proto: CartridgeLightRifle
     capacity: 80
   - type: Sprite
-    sprite: Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/pk_box.rsi
+    sprite: DeltaV/Objects/Weapons/Guns/Ammunition/Magazine/LightRifle/pk_box.rsi
   - type: MagazineVisuals
     magState: mag
     steps: 7
