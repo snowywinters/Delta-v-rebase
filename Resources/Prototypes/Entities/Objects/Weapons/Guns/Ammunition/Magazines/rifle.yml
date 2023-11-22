@@ -76,7 +76,7 @@
       map: ["enum.GunVisualLayers.Mag"]
 
 - type: entity
-  id: MagazineRifleRubber
+  id: MagazineRifleincediary
   name: "magazine (.20 rifle incediary)"
   parent: BaseMagazineRifle
   components:
