@@ -867,3 +867,33 @@
   #   node: clownHardsuit
   - type: ToggleableClothing
     clothingPrototype: ClothingHeadHelmetHardsuitClown
+
+#nano armor
+#nano hardsuit
+- type: entity
+  parent: ClothingOuterHardsuitBase
+  id: ClothingOuterHardsuitnano
+  name: nano hardsuit
+  description: State of the art compressed nanotechnology
+  components:
+  - type: Sprite
+    sprite: Clothing/OuterClothing/Hardsuits/nano.rsi
+  - type: Clothing
+    sprite: Clothing/OuterClothing/Hardsuits/nono.rsi
+  - type: PressureProtection
+    highPressureMultiplier: 1.0
+    lowPressureMultiplier: 0
+  - type: ExplosionResistance
+    damageCoefficient: 1.0
+  - type: Armor
+    modifiers:
+      coefficients:
+        Blunt: 0.09
+        Slash: 0.09
+        Piercing: 0.09
+  - type: ClothingSpeedModifier
+    walkModifier: 0.0
+    sprintModifier: 0.0
+  - type: ToggleableClothing
+    clothingPrototype: ClothingHeadHelmetHardsuitnano
+
