@@ -1026,3 +1026,177 @@ Entries:
         effort.
   id: 153
   time: '2023-12-03T00:48:41.0000000+00:00'
+- author: Velcroboy
+  changes:
+    - type: Fix
+      message: Fixed air chamber in The Hive's atmos not having a vacuum.
+  id: 154
+  time: '2023-12-05T19:16:18.0000000+00:00'
+- author: FluffiestFloof
+  changes:
+    - type: Tweak
+      message: Vulpkanin now have a decent amount of special helmet and mask sprites.
+  id: 155
+  time: '2023-12-06T08:16:15.0000000+00:00'
+- author: luringens
+  changes:
+    - type: Add
+      message: Prisoners are back!
+    - type: Fix
+      message: >-
+        Gladiators, prisoners and prison guards start the shift at their
+        predesignated locations.
+  id: 156
+  time: '2023-12-06T15:54:37.0000000+00:00'
+- author: Tryded
+  changes:
+    - type: Add
+      message: Added energy guns to dynamic protolathe emagable recipes.
+  id: 157
+  time: '2023-12-06T15:57:01.0000000+00:00'
+- author: Ygg01
+  changes:
+    - type: Add
+      message: Digging dirt.
+  id: 158
+  time: '2023-12-06T15:58:00.0000000+00:00'
+- author: Velcroboy
+  changes:
+    - type: Tweak
+      message: Buffed Food Cart storage. Get out there and slang some burgers, chefs!
+  id: 159
+  time: '2023-12-06T15:58:43.0000000+00:00'
+- author: ps3moira
+  changes:
+    - type: Add
+      message: >-
+        Added mouse operative reinforcements, which can be bought from the
+        Syndicate uplink
+  id: 160
+  time: '2023-12-06T16:03:07.0000000+00:00'
+- author: evilexecutive
+  changes:
+    - type: Add
+      message: Harpies now have a visual indication when they're playing a Midi.
+    - type: Tweak
+      message: >-
+        Harpies have been re-balanced so that they now actually have a numerical
+        positive. 
+  id: 161
+  time: '2023-12-06T20:10:49.0000000+00:00'
+- author: DebugOk
+  changes:
+    - type: Tweak
+      message: Due to abuse, prisoners now require whitelist to play.
+  id: 162
+  time: '2023-12-07T13:22:03.0000000+00:00'
+- author: ps3moira
+  changes:
+    - type: Remove
+      message: Removed bionic syrinx implanter from surplus crate.
+  id: 163
+  time: '2023-12-11T23:11:41.0000000+00:00'
+- author: ps3moira
+  changes:
+    - type: Remove
+      message: Removed Carpotoxin from Sashimi, now they are sushi-grade!
+  id: 164
+  time: '2023-12-13T20:12:46.0000000+00:00'
+- author: Adrian16199
+  changes:
+    - type: Add
+      message: Crew has learned how to make a straw hat out of wheat bushels!
+  id: 165
+  time: '2023-12-13T20:13:45.0000000+00:00'
+- author: IamVelcroboy
+  changes:
+    - type: Add
+      message: Added Yule! Happy Holidays!
+  id: 166
+  time: '2023-12-13T20:21:34.0000000+00:00'
+- author: ps3moira
+  changes:
+    - type: Add
+      message: Added Fish n' Chips. Thank the British!
+  id: 167
+  time: '2023-12-13T20:32:51.0000000+00:00'
+- author: Adrian16199
+  changes:
+    - type: Tweak
+      message: Felinids now meow out their words. They can also sigh now.
+  id: 168
+  time: '2023-12-13T21:28:39.0000000+00:00'
+- author: VMSolidus
+  changes:
+    - type: Fix
+      message: Harpies no longer choke on completely breathable air
+  id: 169
+  time: '2023-12-14T05:13:43.0000000+00:00'
+- author: UnicornOnLSD
+  changes:
+    - type: Tweak
+      message: Changed bags of holding cost to be more consistent.
+  id: 170
+  time: '2023-12-14T09:17:35.0000000+00:00'
+- author: Adrian16199
+  changes:
+    - type: Fix
+      message: Fixed non-wizden species not having markings.
+  id: 171
+  time: '2023-12-17T21:59:15.0000000+00:00'
+- author: Adrian16199
+  changes:
+    - type: Add
+      message: Vulpkanins can sigh now.
+  id: 172
+  time: '2023-12-17T22:00:12.0000000+00:00'
+- author: luringens
+  changes:
+    - type: Tweak
+      message: >-
+        Chaplain now gets a glimmer monitor app on their PDA like the rest of
+        epistemics.
+  id: 173
+  time: '2023-12-19T16:19:34.0000000+00:00'
+- author: leonardo-dabepis
+  changes:
+    - type: Remove
+      message: >-
+        the clown has received medical treatment for his chronic snoring. No
+        more HONK mimimimimi
+  id: 174
+  time: '2023-12-20T03:01:27.0000000+00:00'
+- author: deltanedas
+  changes:
+    - type: Add
+      message: >-
+        The fishops advanced user manual is now available in all finer
+        bookstores near you.
+  id: 175
+  time: '2023-12-21T02:08:37.0000000+00:00'
+- author: Velcroboy and Kilk
+  changes:
+    - type: Add
+      message: Added departmental winter boots!
+  id: 176
+  time: '2023-12-21T02:12:04.0000000+00:00'
+- author: Loonessia
+  changes:
+    - type: Fix
+      message: Deep fried burned food items should now have a description
+  id: 177
+  time: '2023-12-21T02:15:30.0000000+00:00'
+- author: Adrian16199
+  changes:
+    - type: Add
+      message: Head of personel has gotten back their armoured coat.
+  id: 178
+  time: '2023-12-21T02:17:25.0000000+00:00'
+- author: DebugOk
+  changes:
+    - type: Add
+      message: Merged wizden. The upstream changelog may contain incorrect entries.
+    - type: Fix
+      message: The random client freezes/crashes should be mostly gone.
+  id: 179
+  time: '2023-12-22T23:46:32.0000000+00:00'
