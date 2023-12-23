@@ -40,7 +40,7 @@
   - type: Clothing
     sprite: Clothing/OuterClothing/Hardsuits/atmospherics.rsi
   - type: PressureProtection
-    highPressureMultiplier: 0.02
+    highPressureMultiplier: 1000
     lowPressureMultiplier: 1000
   - type: TemperatureProtection
     coefficient: 0.001
