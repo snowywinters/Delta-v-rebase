@@ -215,9 +215,9 @@
     nodes:
       power:
         !type:CableNode
-        nodeGroupID: HVPower
+        nodeGroupID: HVRPower
   - type: Cable
-    cableDroppedOnCutPrototype: CableHVStack1
+    cableDroppedOnCutPrototype: CableHVRStack1
     cableType: HighVoltageReinforced
   - type: Destructible
     thresholds:
