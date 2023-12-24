@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "size": {
+        "x": 32,
+        "y": 32
+    },
+	"license": "CC-BY-SA-4.0",
+	"copyright": "Made by PJB3005 | further modified by snowy",
+    "states": [
+        {
+            "name": "hvrcable_0"
+
+        },
+        {
+            "name": "hvrcable_1"
+
+        },
+        {
+            "name": "hvrcable_2"
+
+        },
+        {
+            "name": "hvrcable_3"
+
+        },
+        {
+            "name": "hvrcable_4"
+
+        },
+        {
+            "name": "hvrcable_5"
+
+        },
+        {
+            "name": "hvrcable_6"
+
+        },
+        {
+            "name": "hvrcable_7"
+
+        },
+        {
+            "name": "hvrcable_8"
+
+        },
+        {
+            "name": "hvrcable_9"
+
+        },
+        {
+            "name": "hvrcable_10"
+
+        },
+        {
+            "name": "hvrcable_11"
+
+        },
+        {
+            "name": "hvrcable_12"
+
+        },
+        {
+            "name": "hvrcable_13"
+
+        },
+        {
+            "name": "hvrcable_14"
+
+        },
+        {
+            "name": "hvrcable_15"
+
+        }
+    ]
+}

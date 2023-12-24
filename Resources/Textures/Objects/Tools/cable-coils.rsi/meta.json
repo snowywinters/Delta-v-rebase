@@ -1,90 +1,158 @@
 {
   "version": 1,
   "license": "CC-BY-SA-3.0",
-  "copyright": "Taken from tgstation and modified by SweptWasTaken at commit https://github.com/tgstation/tgstation/commit/77608a9f46b06a46f0f6b1be061755f68cc255a3",
+  "copyright": "Taken from tgstation and modified by SweptWasTaken at commit https://github.com/tgstation/tgstation/commit/77608a9f46b06a46f0f6b1be061755f68cc255a3 | modified by snowy",
   "size": {
     "x": 32,
     "y": 32
   },
-  "states": [
-    {
-      "name": "coilhv-inhand-left",
-      "directions": 4
-    },
-    {
-      "name": "coilhv-inhand-right",
-      "directions": 4
-    },
-    {
-      "name": "coilmv-inhand-left",
-      "directions": 4
-    },
-    {
-      "name": "coilmv-inhand-right",
-      "directions": 4
-    },
-    {
-      "name": "coillv-inhand-left",
-      "directions": 4
-    },
-    {
-      "name": "coillv-inhand-right",
-      "directions": 4
-    },
-    {
-      "name": "coil-30"
-    },
-    {
-      "name": "coil-20"
-    },
-    {
-      "name": "coil-10"
-    },
-    {
-      "name": "coilhv-30"
-    },
-    {
-      "name": "coilhv-20"
-    },
-    {
-      "name": "coilhv-10"
-    },
-    {
-      "name": "coilmv-30"
-    },
-    {
-      "name": "coilmv-20"
-    },
-    {
-      "name": "coilmv-10"
-    },
-    {
-      "name": "coillv-30"
-    },
-    {
-      "name": "coillv-20"
-    },
-    {
-      "name": "coillv-10"
-    },
-    {
-      "name": "coilall-30"
-    },
-    {
-      "name": "coil-equipped-BELT",
-      "directions": 4
-    },
-    {
-      "name": "coillv-equipped-BELT",
-      "directions": 4
-    },
-    {
-      "name": "coilmv-equipped-BELT",
-      "directions": 4
-    },
-    {
-      "name": "coilhv-equipped-BELT",
-      "directions": 4
-    }
-  ]
+    "states": [
+        {
+            "name": "coilhv-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coilhv-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "coilmv-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coilmv-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "coillv-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coillv-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "coil-30"
+        },
+        {
+            "name": "coil-20"
+        },
+        {
+            "name": "coil-10"
+        },
+        {
+            "name": "coilhv-30"
+        },
+        {
+            "name": "coilhv-20"
+        },
+        {
+            "name": "coilhv-10"
+        },
+        {
+            "name": "coilmv-30"
+        },
+        {
+            "name": "coilmv-20"
+        },
+        {
+            "name": "coilmv-10"
+        },
+        {
+            "name": "coillv-30"
+        },
+        {
+            "name": "coillv-20"
+        },
+        {
+            "name": "coillv-10"
+        },
+        {
+            "name": "coilall-30"
+        },
+        {
+            "name": "coil-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coillv-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coilmv-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coilhv-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coilhvr-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coilhvr-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "coilmvr-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coilmvr-inhand-right",
+            "directions": 4
+        },
+        {
+            "name": "coillvr-inhand-left",
+            "directions": 4
+        },
+        {
+            "name": "coillvr-inhand-right",
+            "directions": 4
+        },
+        
+        {
+            "name": "coilhvr-30"
+        },
+        {
+            "name": "coilhvr-20"
+        },
+        {
+            "name": "coilhvr-10"
+        },
+        {
+            "name": "coilmvr-30"
+        },
+        {
+            "name": "coilmvr-20"
+        },
+        {
+            "name": "coilmvr-10"
+        },
+        {
+            "name": "coillvr-30"
+        },
+        {
+            "name": "coillvr-20"
+        },
+        {
+            "name": "coillvr-10"
+        },
+        {
+            "name": "coilallr-30"
+        },
+
+        {
+            "name": "coillvr-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coilmvr-equipped-BELT",
+            "directions": 4
+        },
+        {
+            "name": "coilhvr-equipped-BELT",
+            "directions": 4
+        }
+    ]
 }
