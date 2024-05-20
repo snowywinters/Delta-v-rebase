@@ -33,18 +33,15 @@
       - !type:DoActsBehavior
         acts: ["Destruction"]
   - type: WiresPanel
-  - type: Wires
-    boardName: wires-board-name-autolathe
-    layoutId: Autolathe
   - type: ActivatableUI
     key: enum.LatheUiKey.Key
   - type: ActivatableUIRequiresPower
   - type: UserInterface
     interfaces:
-    - key: enum.LatheUiKey.Key
-      type: LatheBoundUserInterface
-    - key: enum.ResearchClientUiKey.Key
-      type: ResearchClientBoundUserInterface
+      enum.LatheUiKey.Key:
+        type: LatheBoundUserInterface
+      enum.ResearchClientUiKey.Key:
+        type: ResearchClientBoundUserInterface
   - type: Transform
     anchored: true
   - type: Pullable
@@ -53,9 +50,44 @@
   - type: ResearchClient
   - type: TechnologyDatabase
 
+# a lathe that can be sped up with space lube / slowed down with glue
+- type: entity
+  abstract: true
+  parent: BaseLathe
+  id: BaseLatheLube
+  components:
+  - type: ReagentSpeed
+    solution: lube
+    modifiers:
+      SpaceLube: 0.25
+      SpaceGlue: 5
+  - type: SolutionContainerManager
+    solutions:
+      lube:
+        maxVol: 250
+  - type: Spillable
+    solution: lube
+  - type: RefillableSolution
+    solution: lube
+  - type: ExaminableSolution
+    solution: lube
+
+- type: entity
+  abstract: true
+  id: BaseHyperlathe
+  components:
+  - type: Lathe
+    materialUseMultiplier: 0.5
+    timeMultiplier: 1.5
+  - type: LatheHeatProducing
+  - type: ReagentSpeed
+    modifiers:
+      SpaceLube: 0.8 # being faster means less heat so lube needs to be nerfed
+      SpaceGlue: 5 # no change from normal lathe, overheat!!!
+
 - type: entity
   id: Autolathe
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: autolathe
   description: It produces items using metal and glass.
   components:
@@ -85,6 +117,8 @@
     runningState: building
     staticRecipes:
       - Wirecutter
+      - Igniter
+      - Signaller
       - Screwdriver
       - Welder
       - Wrench
@@ -98,6 +132,7 @@
       - CableHVStack
       - HandheldGPSBasic
       - TRayScanner
+      - AirTank
       - GasAnalyzer
       - UtilityBelt
       - Fulton
@@ -110,15 +145,18 @@
       - Syringe
       - HandLabeler
       - LightTube
+      - LedLightTube
       - SodiumLightTube
       - ExteriorLightTube
       - LightBulb
+      - LedLightBulb
       - Bucket
       - DrinkMug
       - DrinkMugMetal
       - DrinkGlass
       - DrinkShotGlass
       - DrinkGlassCoupeShaped
+      - CustomDrinkJug
       - FoodPlate
       - FoodPlateSmall
       - FoodPlatePlastic
@@ -134,7 +172,6 @@
       - TrashBag
       - PowerCellSmall
       - PowerCellMedium
-      - VehicleWheelchairFolded
       - RollerBedSpawnFolded
       - CheapRollerBedSpawnFolded
       - EmergencyRollerBedSpawnFolded
@@ -153,13 +190,15 @@
       - APCElectronics
       - SMESMachineCircuitboard
       - SubstationMachineCircuitboard
+      - WallmountSubstationElectronics
       - CellRechargerCircuitboard
       - BorgChargerCircuitboard
       - WeaponCapacitorRechargerCircuitboard
+      - HandheldStationMap
+      - ClothingHeadHatWelding
   - type: EmagLatheRecipes
     emagStaticRecipes:
        - CartridgePistol
-       - CartridgeSpecial # DeltaV - .38 Special revolver
        - CartridgeMagnum
        - ShellShotgun
        - ShellShotgunFlare
@@ -171,9 +210,12 @@
        - MagazineBoxRifle
        - MagazineBoxLightRifle
        - GrenadeBlast
+       # DeltaV - .38 special ammo - Add .38 special lethals to emagged autolathe
+       - CartridgeSpecial
+       - MagazineBoxSpecial
+       # End of modified code
     emagDynamicRecipes:
       - CartridgePistolRubber
-      - CartridgeSpecialRubber # DeltaV - .38 Special revolver
       - CartridgeMagnumRubber
       - ShellShotgunBeanbag
       - CartridgeRifleRubber
@@ -206,25 +248,31 @@
       - MagazineGrenadeEmpty
       - GrenadeEMP
       - GrenadeFlash
+      # DeltaV - .38 special ammo - Add various .38 special ammo to emagged autolathe
+      - CartridgeSpecialRubber
+      - CartridgeSpecialIncendiary
+      - CartridgeSpecialUranium
+      - CartridgeSpecialMindbreaker
+      - MagazineBoxSpecialRubber
+      - MagazineBoxSpecialIncendiary
+      - MagazineBoxSpecialUranium
+      - MagazineBoxSpecialMindbreaker
+      # End of modified code
 
 - type: entity
   id: AutolatheHyperConvection
-  parent: Autolathe
+  parent: [Autolathe, BaseHyperlathe]
   name: hyper convection autolathe
   description: A highly-experimental autolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
   components:
   - type: Sprite
     sprite: Structures/Machines/autolathe_hypercon.rsi
-  - type: Lathe
-    materialUseMultiplier: 0.5
-    timeMultiplier: 1.5
-  - type: LatheHeatProducing
   - type: Machine
     board: AutolatheHyperConvectionMachineCircuitboard
 
 - type: entity
   id: Protolathe
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: protolathe
   description: Converts raw materials into useful objects.
   components:
@@ -243,9 +291,6 @@
       map: ["enum.WiresVisualLayers.MaintenancePanel"]
   - type: Machine
     board: ProtolatheMachineCircuitboard
-  - type: Wires
-    boardName: wires-board-name-protolathe
-    layoutId: Protolathe
   - type: MaterialStorage
     whitelist:
       tags:
@@ -255,6 +300,10 @@
   - type: Lathe
     idleState: icon
     runningState: building
+    staticRecipes:
+    - LargeBeaker
+    - Dropper
+    - ClothingEyesGlassesChemical
     dynamicRecipes:
       - PowerDrill
       - MiningDrill
@@ -270,16 +319,12 @@
       - HoloprojectorField
       - Saw
       - Hemostat
-      - Beaker
-      - LargeBeaker
       - CryostasisBeaker
       - SyringeCryostasis
-      - Dropper
       - Syringe
       - Implanter
       - PillCanister
       - ChemistryEmptyBottle01
-      - Drone
       - AdvMopItem
       - WeaponSprayNozzle
       - ClothingBackpackWaterTank
@@ -288,15 +333,17 @@
       - ChemicalPayload
       - FlashPayload
       - Signaller
+      - SignallerAdvanced
       - SignalTrigger
       - VoiceTrigger
       - Igniter
+      - HandHeldMassScanner
       - PowerCellMicroreactor
       - PowerCellHigh
       - WeaponPistolCHIMP
+      - ClothingMaskWeldingGas
       - WeaponGauntletGorilla
       - SynthesizerInstrument
-      - RPED
       - ClothingShoesBootsMagSci
       - ClothingShoesBootsSpeed
       - NodeScanner
@@ -313,10 +360,12 @@
       - ClothingBackpackDuffelHolding
       - WelderExperimental
       - JawsOfLife
-      - ClothingEyesGlassesChemical
       - CoreSilver # Nyanotrasen - Silver Golem core
       - FauxTileAstroGrass
+      - FauxTileMowedAstroGrass
+      - FauxTileJungleAstroGrass
       - FauxTileAstroIce
+      - FauxTileAstroSnow
       - OreBagOfHolding
       - DeviceQuantumSpinInverter
   - type: EmagLatheRecipes
@@ -333,22 +382,18 @@
 
 - type: entity
   id: ProtolatheHyperConvection
-  parent: Protolathe
+  parent: [Protolathe, BaseHyperlathe]
   name: hyper convection protolathe
   description: A highly-experimental protolathe that harnesses the power of extreme heat to slowly create objects more cost-effectively.
   components:
   - type: Sprite
     sprite: Structures/Machines/protolathe_hypercon.rsi
-  - type: Lathe
-    materialUseMultiplier: 0.5
-    timeMultiplier: 1.5
-  - type: LatheHeatProducing
   - type: Machine
     board: ProtolatheHyperConvectionMachineCircuitboard
 
 - type: entity
   id: CircuitImprinter
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: circuit imprinter
   description: Prints circuit boards for machines.
   components:
@@ -377,10 +422,20 @@
     - MaterialReclaimerMachineCircuitboard
     - ElectrolysisUnitMachineCircuitboard
     - CentrifugeMachineCircuitboard
+    - ChemDispenserMachineCircuitboard
+    - ChemMasterMachineCircuitboard
     - CondenserMachineCircuitBoard
+    - HotplateMachineCircuitboard
     - UniformPrinterMachineCircuitboard
     - FloorGreenCircuit
     - FloorBlueCircuit
+    - MicrowaveMachineCircuitboard
+    - ReagentGrinderMachineCircuitboard
+    - ElectricGrillMachineCircuitboard
+    - BoozeDispenserMachineCircuitboard
+    - SodaDispenserMachineCircuitboard
+    - DeepFryerMachineCircuitboard #Nyano - Summary: adds deep fryer circuit board
+    - SpaceHeaterMachineCircuitBoard
     dynamicRecipes:
       - ThermomachineFreezerMachineCircuitBoard
       - HellfireFreezerMachineCircuitBoard
@@ -390,8 +445,6 @@
       - CryoPodMachineCircuitboard
       - VaccinatorMachineCircuitboard
       - DiagnoserMachineCircuitboard
-      - ChemMasterMachineCircuitboard
-      - ChemDispenserMachineCircuitboard
       - BiomassReclaimerMachineCircuitboard
       - BiofabricatorMachineCircuitboard
       - SurveillanceCameraRouterCircuitboard
@@ -408,10 +461,7 @@
       - PowerComputerCircuitboard
       - AutolatheHyperConvectionMachineCircuitboard
       - ProtolatheHyperConvectionMachineCircuitboard
-      - ReagentGrinderMachineCircuitboard
-      - HotplateMachineCircuitboard
-      - MicrowaveMachineCircuitboard
-      - ElectricGrillMachineCircuitboard
+      - CircuitImprinterHyperConvectionMachineCircuitboard
       - FatExtractorMachineCircuitboard
       - FlatpackerMachineCircuitboard
       - SheetifierMachineCircuitboard
@@ -451,12 +501,11 @@
       - AnomalySynchronizerCircuitboard
       - APECircuitboard
       - ArtifactAnalyzerMachineCircuitboard
-      - TraversalDistorterMachineCircuitboard
       - ArtifactCrusherMachineCircuitboard
-      - BoozeDispenserMachineCircuitboard
-      - SodaDispenserMachineCircuitboard
       - TelecomServerCircuitboard
       - MassMediaCircuitboard
+      - ReagentGrinderIndustrialMachineCircuitboard
+      - JukeboxCircuitBoard
     # Begin Nyano additions
       - ReverseEngineeringMachineCircuitboard
       - CrewMonitoringComputerCircuitboard
@@ -467,8 +516,7 @@
       - MailingUnitElectronics
       - SalvageMagnetMachineCircuitboard
       - StationMapElectronics
-#      - MetempsychoticMachineCircuitboard
-      - DeepFryerMachineCircuitboard
+      - MetempsychoticMachineCircuitboard
     # End Nyano additions
       - SalvageExpeditionsComputerCircuitboard # DeltaV
   - type: MaterialStorage
@@ -479,8 +527,19 @@
         - Ingot
 
 - type: entity
+  id: CircuitImprinterHyperConvection
+  parent: [CircuitImprinter, BaseHyperlathe]
+  name: hyper convection circuit imprinter
+  description: A highly-experimental circuit imprinter that harnesses the power of extreme heat to slowly create objects more cost-effectively.
+  components:
+  - type: Sprite
+    sprite: Structures/Machines/circuit_imprinter_hypercon.rsi
+  - type: Machine
+    board: CircuitImprinterHyperConvectionMachineCircuitboard
+
+- type: entity
   id: ExosuitFabricator
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: exosuit fabricator
   description: Creates parts for robotics and other mechanical needs
   components:
@@ -504,7 +563,6 @@
     - SciFlash
     - BorgModuleCable
     - BorgModuleFireExtinguisher
-    - BorgModuleGPS
     - BorgModuleRadiationDetection
     - BorgModuleTool
     - BorgModuleAppraisal
@@ -553,8 +611,8 @@
     - BorgModuleAdvancedCleaning
     - BorgModuleMining
     #- BorgModuleGrapplingGun
-    - BorgModuleGasAnalyzer
     - BorgModuleAdvancedTool
+    - BorgModuleGPS
     - BorgModuleRCD
     - BorgModuleArtifact
     - BorgModuleAnomaly
@@ -645,7 +703,7 @@
 
 - type: entity
   id: SecurityTechFab
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: security techfab
   description: Prints equipment for use by security crew.
   components:
@@ -685,12 +743,10 @@
       - MagazineRifle
       - MagazineLightRifle
       - MagazineBoxPistol
-      - MagazineBoxSpecial # DeltaV - .38 Special revolver
       - MagazineBoxMagnum
       - MagazineBoxRifle
       - MagazineBoxLightRifle
       - SpeedLoaderMagnum
-      - SpeedLoaderSpecial # DeltaV - .38 Special revolver
       - ClothingOuterArmorPlateCarrier # DeltaV - plate carrier body armour
       - ClothingOuterArmorDuraVest # DeltaV - stabproof vest body armour
       - TargetHuman
@@ -703,10 +759,14 @@
       - ShellShotgunPractice
       - WeaponLaserCarbinePractice
       - WeaponDisablerPractice
+      # DeltaV - .38 special ammo - Add various .38 special ammo to security techfab
+      - MagazineBoxSpecial
+      - MagazineBoxSpecialPractice
+      - SpeedLoaderSpecial
+      - MagazinePistolSpecial
+      # End of modified code
     dynamicRecipes:
-      - CartridgeSpecialRubber # DeltaV - .38 Special revolver
       - EncryptionKeySyndie # Nyano
-      - MagazineBoxSpecialRubber # DeltaV - .38 Special revolver
       - CartridgeLightRifleIncendiary
       - CartridgeMagnumIncendiary
       - CartridgePistolIncendiary
@@ -719,7 +779,6 @@
       - CartridgeMagnumRubber
       - CartridgePistolRubber
       - CartridgeRifleRubber
-      - ClothingEyesGlassesSecurity
       - ExplosivePayload
       - FlashPayload
       - HoloprojectorSecurity
@@ -731,8 +790,6 @@
       - MagazineBoxMagnumUranium
       - MagazineBoxPistolUranium
       - MagazineBoxRifleUranium
-      - CartridgeSpecialHoly # DeltaV - .38 Special revolver, Holy ammo
-      - CartridgeSpecialMindbreaker # DeltaV - .38 Special revolver, Mindbreaker ammo
       - ShellSoulbreaker # Nyanotrasen - Shotgun shell to get rid of psionics
       - MagazineBoxLightRifleRubber
       - MagazineBoxMagnumRubber
@@ -770,6 +827,17 @@
       - WeaponEnergyGunMini #DeltaV - Energy Gun but miniature
       - WeaponEnergyGunPistol #DeltaV - Energy Gun Mini but with the power of a normal energy gun
       - WeaponGunLaserCarbineAutomatic #DeltaV - New Laser Projectiles with a 20 round carbine
+      # DeltaV - .38 special ammo - Add various .38 special ammo to security techfab
+      - CartridgeSpecialRubber
+      - CartridgeSpecialIncendiary
+      - CartridgeSpecialUranium
+      - CartridgeSpecialHoly
+      - CartridgeSpecialMindbreaker
+      - MagazineBoxSpecialRubber
+      - MagazineBoxSpecialIncendiary
+      - MagazineBoxSpecialUranium
+      - MagazineBoxSpecialMindbreaker
+      # End of modified code
   - type: MaterialStorage
     whitelist:
       tags:
@@ -779,7 +847,7 @@
 
 - type: entity
   id: AmmoTechFab
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: ammo techfab
   description: Prints the bare minimum of bullets that any budget military or armory could need. Nothing fancy.
   components:
@@ -814,14 +882,20 @@
         - MagazineBoxMagnum
         - MagazineBoxRifle
         - MagazineBoxLightRifle
+        # DeltaV - .38 special ammo - Add lethal .38 special ammo to ammo techfab
+        - CartridgeSpecial
+        - MagazineBoxSpecial
+        # End of modified code
     - type: MaterialStorage
       whitelist:
         tags:
           - Sheet
+          - RawMaterial
+          - Ingot
 
 - type: entity
   id: MedicalTechFab
-  parent: BaseLathe
+  parent: BaseLatheLube
   name: medical techfab
   description: Prints equipment for use by the medbay.
   components:
@@ -849,15 +923,18 @@
       - Defibrillator
       - HandheldHealthAnalyzer
       - ClothingHandsGlovesLatex
+      - ClothingHandsGlovesNitrile
       - ClothingMaskSterile
       - DiseaseSwab
       - Beaker
+      - LargeBeaker
+      - Dropper
+      - Jug
       - Syringe
       - Implanter
       - PillCanister
       - BodyBag
       - ChemistryEmptyBottle01
-      - VehicleWheelchairFolded
       - RollerBedSpawnFolded
       - CheapRollerBedSpawnFolded
       - EmergencyRollerBedSpawnFolded
@@ -869,23 +946,20 @@
       - MedkitAdvanced
       - MedkitRadiation
       - MedkitCombat
-    dynamicRecipes:
-      - HandheldCrewMonitor
-      - ClothingHandsGlovesNitrile
-      - CryostasisBeaker
-      - LargeBeaker
-      - Dropper
       - Scalpel
       - Retractor
       - Cautery
       - Drill
       - Saw
       - Hemostat
+      - ClothingEyesGlassesChemical
+    dynamicRecipes:
+      - ChemicalPayload
+      - CryostasisBeaker
       - BluespaceBeaker
       - SyringeBluespace
       - ClothingEyesHudMedical # Nyano
       - ChemicalPayload # Nyano
-      - Jug
       - SyringeCryostasis
   - type: Machine
     board: MedicalTechFabCircuitboard
@@ -941,10 +1015,14 @@
       - ClothingHeadHatBeretCmo
       - ClothingUniformJumpsuitCMO
       - ClothingUniformJumpskirtCMO
+      - ClothingUniformJumpsuitCMOTurtle
+      - ClothingUniformJumpskirtCMOTurtle
       - ClothingUniformJumpsuitDetective
       - ClothingUniformJumpskirtDetective
       - ClothingUniformJumpsuitEngineering
       - ClothingUniformJumpskirtEngineering
+      - ClothingUniformJumpsuitSeniorEngineer
+      - ClothingUniformJumpskirtSeniorEngineer
       - ClothingHeadHatHopcap
       - ClothingUniformJumpsuitHoP
       - ClothingUniformJumpskirtHoP
@@ -978,23 +1056,31 @@
       - ClothingHeadHatBeretSeniorPhysician
       - ClothingUniformJumpsuitMedicalDoctor
       - ClothingUniformJumpskirtMedicalDoctor
+      - ClothingUniformJumpsuitSeniorPhysician
+      - ClothingUniformJumpskirtSeniorPhysician
       - ClothingUniformJumpsuitMime
       - ClothingUniformJumpskirtMime
       - ClothingUniformJumpsuitMusician
       - ClothingUniformJumpsuitParamedic
       - ClothingUniformJumpskirtParamedic
+      - ClothingUniformJumpsuitSeniorOfficer
+      - ClothingUniformJumpskirtSeniorOfficer
       - ClothingUniformJumpsuitPrisoner
       - ClothingUniformJumpskirtPrisoner
       - ClothingHeadHatQMsoft
+      - ClothingHeadHatBeretQM
       - ClothingUniformJumpsuitQM
       - ClothingUniformJumpskirtQM
       - ClothingUniformJumpsuitQMTurtleneck
       - ClothingUniformJumpskirtQMTurtleneck
+      - ClothingUniformJumpsuitQMFormal
       - ClothingHeadHatBeretRND
       - ClothingUniformJumpsuitResearchDirector
       - ClothingUniformJumpskirtResearchDirector
       - ClothingUniformJumpsuitScientist
       - ClothingUniformJumpskirtScientist
+      - ClothingUniformJumpsuitSeniorResearcher
+      - ClothingUniformJumpskirtSeniorResearcher
       - ClothingHeadHatBeretSecurity
       - ClothingUniformJumpsuitSec
       - ClothingUniformJumpskirtSec
@@ -1013,12 +1099,14 @@
       - ClothingUniformJumpskirtWardenBlue # DeltaV - alternate sec uniforms
       - ClothingUniformJumpsuitWardenGrey # DeltaV - alternate sec uniforms
       - ClothingUniformJumpskirtWardenGrey # DeltaV - alternate sec uniforms
+      - ClothingHeadHatParamedicsoft
       # Winter outfits
       - ClothingOuterWinterCap
       - ClothingOuterWinterCE
       - ClothingOuterWinterCMO
       - ClothingOuterWinterHoP
-      - ClothingOuterWinterHoS
+      - ClothingOuterWinterHoSUnarmored
+      - ClothingOuterWinterWardenUnarmored
       - ClothingOuterWinterQM
       - ClothingOuterWinterRD
       - ClothingNeckMantleCap
@@ -1053,6 +1141,25 @@
       - ClothingNeckTieRed
       - ClothingNeckTieDet
       - ClothingNeckTieSci
+      # Scarfs - All scarfs avaible in winterdrobe
+      - ClothingNeckScarfStripedGreen
+      - ClothingNeckScarfStripedBlue
+      - ClothingNeckScarfStripedRed
+      - ClothingNeckScarfStripedBrown
+      - ClothingNeckScarfStripedLightBlue
+      - ClothingNeckScarfStripedOrange
+      - ClothingNeckScarfStripedBlack
+      - ClothingNeckScarfStripedPurple
+      # Carpets
+      - Carpet
+      - CarpetBlack
+      - CarpetPink
+      - CarpetBlue
+      - CarpetGreen
+      - CarpetOrange
+      - CarpetPurple
+      - CarpetCyan
+      - CarpetWhite
   - type: EmagLatheRecipes
     emagStaticRecipes:
       - ClothingHeadHatCentcomcap
@@ -1124,6 +1231,9 @@
         - IngotGold30
         - IngotSilver30
         - MaterialBananium10
+    - type: MaterialStorageMagnetPickup # Delta V - Summary: Adds magnet pull from Frontier
+      magnetEnabled: True
+      range: 0.30 # Delta V - End Magnet Pull
 
 - type: entity
   parent: OreProcessor

@@ -13,10 +13,16 @@
   id: Directional
 
 - type: Tag
+  id: DockShipyard
+
+- type: Tag
   id: ForensicBeltEquip
 
 - type: Tag
   id: HandLabeler
+
+- type: Tag
+  id: HidesHarpyWings
 
 - type: Tag
   id: MagazinePistolSpecial # For the .38 special ammo and pistol
@@ -34,7 +40,7 @@
   id: BionicSyrinxImplant
 
 - type: Tag
-  id: Wheat
+  id: PaperSlip
 
 - type: Tag
-  id: PaperSlip
+  id: Skirt

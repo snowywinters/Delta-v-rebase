@@ -316,19 +316,6 @@
       job: Bartender
       name: Pun Pun
 
-- type: entity # DeltaV - Security dog Laika ID card
-  parent: IDCardStandard
-  id: SecDogIDCard
-  name: Security Dog ID card
-  components:
-    - type: Sprite
-      layers:
-        - state: default
-        - state: idsecurityofficer
-    - type: PresetIdCard
-      job: SecurityOfficer
-      name: Laika
-
 - type: entity
   parent: IDCardStandard
   id: ChefIDCard
@@ -604,8 +591,8 @@
   id: AgentIDCard
   suffix: Agent
   components:
-  - type: IdCard
-    jobTitle: Passenger
+  - type: PresetIdCard
+    job: Passenger
   - type: Access
     tags:
     - Maintenance
@@ -648,7 +635,6 @@
     - JobIconChiefEngineer
     - JobIconBartender
     - JobIconHeadOfSecurity
-    - JobIconBrigmedic
     - JobIconMedicalDoctor
     - JobIconParamedic
     - JobIconChef
@@ -663,15 +649,12 @@
     - JobIconServiceWorker
     - JobIconSecurityCadet
     - JobIconZookeeper
-    - JobIconSeniorPhysician
-    - JobIconSeniorOfficer
-    - JobIconSeniorEngineer
-    - JobIconSeniorResearcher
     - JobIconPrisonGuard # Nyanotrasen - PrisonGuard, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Security/prisonguard.yml
     - JobIconMailCarrier # Nyanotrasen - MailCarrier, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Cargo/mail-carrier.yml
     - JobIconMartialArtist # Nyanotrasen - MartialArtist, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Wildcards/martialartist.yml
     - JobIconGladiator # Nyanotrasen - Gladiator, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Wildcards/gladiator.yml
     - JobIconForensicMantis  # Nyanotrasen - ForensicMantis, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Epistemics/forensicmantis.yml
+    - JobIconVisitor
   - type: ActivatableUI
     key: enum.AgentIDCardUiKey.Key
     inHandsOnly: true
@@ -683,9 +666,9 @@
     default: PassengerIDCard
   - type: UserInterface
     interfaces:
-      - key: enum.AgentIDCardUiKey.Key
+      enum.AgentIDCardUiKey.Key:
         type: AgentIDCardBoundUserInterface
-      - key: enum.ChameleonUiKey.Key
+      enum.ChameleonUiKey.Key:
         type: ChameleonBoundUserInterface
 
 - type: entity
@@ -827,7 +810,7 @@
   - type: Unremoveable
 
 - type: entity
-  parent: IDCardStandard
+  parent: EngineeringIDCard
   id: SeniorEngineerIDCard
   name: senior engineer ID card
   components:
@@ -835,11 +818,11 @@
     layers:
     - state: default
     - state: idseniorengineer
-  - type: PresetIdCard
-    job: SeniorEngineer
+  - type: PresetIdCard # DeltaV - Change senior job titles
+    customJob: Senior Engineer
 
 - type: entity
-  parent: IDCardStandard
+  parent: ResearchIDCard
   id: SeniorResearcherIDCard
   name: senior researcher ID card
   components:
@@ -847,11 +830,11 @@
     layers:
     - state: default
     - state: idseniorresearcher
-  - type: PresetIdCard
-    job: SeniorResearcher
+  - type: PresetIdCard # DeltaV - Change senior job titles
+    customJob: Senior Researcher
 
 - type: entity
-  parent: IDCardStandard
+  parent: MedicalIDCard
   id: SeniorPhysicianIDCard
   name: senior physician ID card
   components:
@@ -859,11 +842,11 @@
     layers:
     - state: default
     - state: idseniorphysician
-  - type: PresetIdCard
-    job: SeniorPhysician
+  - type: PresetIdCard # DeltaV - Change senior job titles
+    customJob: Senior Physician
 
 - type: entity
-  parent: IDCardStandard
+  parent: SecurityIDCard
   id: SeniorOfficerIDCard
   name: senior officer ID card
   components:
@@ -871,5 +854,5 @@
     layers:
     - state: default
     - state: idseniorofficer
-  - type: PresetIdCard
-    job: SeniorOfficer
+  - type: PresetIdCard # DeltaV - Change senior job titles
+    customJob: Senior Officer

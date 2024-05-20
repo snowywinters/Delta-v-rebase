@@ -8,10 +8,6 @@
   - type: HumanoidAppearance
     species: Moth
   - type: Hunger
-    # starvationDamage: # DeltaV - Disable starvation damage
-    #   types:
-    #     Cold: 0.5
-    #     Bloodloss: 0.5
   - type: Thirst
   - type: Carriable # Carrying system from nyanotrasen.
   - type: Icon
@@ -27,6 +23,7 @@
     accent: zombieMoth
   - type: Speech
     speechVerb: Moth
+    allowedEmotes: ['Chitter', 'Squeak']
   - type: TypingIndicator
     proto: moth
   - type: Butcherable

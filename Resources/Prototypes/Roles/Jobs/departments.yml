@@ -7,6 +7,7 @@
   - Quartermaster
   - SalvageSpecialist
   - MailCarrier # Nyanotrasen - MailCarrier, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Cargo/mail-carrier.yml
+  - Courier # DeltaV - Courier, see Resources/Prototypes/DeltaV/Roles/Jobs/Cargo/courier.yml
 
 - type: department
   id: Civilian
@@ -29,6 +30,7 @@
   - Musician
   - Passenger
   - Reporter
+  - Visitor
   - Zookeeper
   - ServiceWorker
   - MartialArtist # Nyanotrasen - MartialArtist, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Wildcards/martialartist.yml
@@ -58,7 +60,6 @@
   roles:
   - AtmosphericTechnician
   - ChiefEngineer
-  - SeniorEngineer
   - StationEngineer
   - TechnicalAssistant
 
@@ -73,7 +74,7 @@
   - MedicalIntern
   - Psychologist
   - Paramedic
-  - SeniorPhysician
+  - MedicalBorg  # Delta V - Medical Borg, see Resources/Prototypes/DeltaV/Roles/Jobs/Medical/medicalborg.yml
 
 - type: department
   id: Security
@@ -84,7 +85,6 @@
   - HeadOfSecurity
   - SecurityCadet
   - SecurityOfficer
-  - SeniorOfficer
   - Detective
   - Warden
   - PrisonGuard # Nyanotrasen - PrisonGuard, see Resources/Prototypes/Nyanotrasen/Roles/Jobs/Security/prisonguard.yml
@@ -96,7 +96,6 @@
   color: "#D381C9"
   roles:
   - ResearchDirector
-  - SeniorResearcher
   - Scientist
   - ResearchAssistant
   - Chaplain # DeltaV - Move Chaplain into Epistemics

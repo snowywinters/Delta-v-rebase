@@ -15,6 +15,7 @@ using Content.Server.Nyanotrasen.Kitchen.Components;
 using Content.Server.Popups;
 using Content.Server.Power.Components;
 using Content.Server.Power.EntitySystems;
+using Content.Server.Storage.EntitySystems;
 using Content.Server.Temperature.Components;
 using Content.Server.Temperature.Systems;
 using Content.Server.UserInterface;
@@ -43,6 +44,7 @@ using Content.Shared.Nyanotrasen.Kitchen.Components;
 using Content.Shared.Nyanotrasen.Kitchen.UI;
 using Content.Shared.Popups;
 using Content.Shared.Throwing;
+using Content.Shared.UserInterface;
 using FastAccessors;
 using Robust.Server.GameObjects;
 using Robust.Shared.Audio;
@@ -87,7 +89,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     private static readonly string MobFlavorMeat = "meaty";
 
     private static readonly AudioParams
-        AudioParamsInsertRemove = new(0.5f, 1f, "Master", 5f, 1.5f, 1f, false, 0f, 0.2f);
+        AudioParamsInsertRemove = new(0.5f, 1f, 5f, 1.5f, 1f, false, 0f, 0.2f);
 
     private ISawmill _sawmill = default!;
 
@@ -129,8 +131,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
             component.FryingOilThreshold,
             EntityManager.GetNetEntityArray(component.Storage.ContainedEntities.ToArray()));
 
-        if (!_uiSystem.TrySetUiState(uid, DeepFryerUiKey.Key, state))
-            _sawmill.Warning($"{ToPrettyString(uid)} was unable to set UI state.");
+        _uiSystem.SetUiState(uid, DeepFryerUiKey.Key, state);
     }
 
     /// <summary>
@@ -180,6 +181,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     /// </summary>
     public FixedPoint2 GetOilPurity(EntityUid uid, DeepFryerComponent component)
     {
+        if (component.Solution.Volume == 0) return 0;
         return GetOilVolume(uid, component) / component.Solution.Volume;
     }
 
@@ -240,7 +242,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
             MetaData(item).EntityPrototype?.ID != component.CharredPrototype)
         {
             var charred = Spawn(component.CharredPrototype, Transform(uid).Coordinates);
-            component.Storage.Insert(charred);
+            _containerSystem.Insert(charred, component.Storage);
             Del(item);
         }
     }
@@ -451,7 +453,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
         if (!CanInsertItem(uid, component, args.Thrown) ||
             _random.Prob(missChance) ||
-            !component.Storage.Insert(args.Thrown))
+            !_containerSystem.Insert(args.Thrown, component.Storage))
         {
             _popupSystem.PopupEntity(
                 Loc.GetString("deep-fryer-thrown-missed"),
@@ -499,7 +501,8 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
     private void OnRelayMovement(EntityUid uid, DeepFryerComponent component,
         ref ContainerRelayMovementEntityEvent args)
     {
-        if (!component.Storage.Remove(args.Entity, EntityManager, destination: Transform(uid).Coordinates))
+
+        if (!_containerSystem.Remove(args.Entity, component.Storage, destination: Transform(uid).Coordinates))
             return;
 
         _popupSystem.PopupEntity(
@@ -522,18 +525,15 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         if (removedItem.Valid)
         {
             //JJ Comment - This line should be unnecessary. Some issue is keeping the UI from updating when converting straight to a Burned Mess while the UI is still open. To replicate, put a Raw Meat in the fryer with no oil in it. Wait until it sputters with no effect. It should transform to Burned Mess, but doesn't.
-            if (!component.Storage.Remove(removedItem))
+            if (!_containerSystem.Remove(removedItem, component.Storage))
                 return;
 
-            var user = args.Session.AttachedEntity;
+            var user = args.Actor;
 
-            if (user != null)
-            {
-                _handsSystem.TryPickupAnyHand(user.Value, removedItem);
+            _handsSystem.TryPickupAnyHand(user, removedItem);
 
-                _adminLogManager.Add(LogType.Action, LogImpact.Low,
-                    $"{ToPrettyString(user.Value)} took {ToPrettyString(args.Item)} out of {ToPrettyString(uid)}.");
-            }
+            _adminLogManager.Add(LogType.Action, LogImpact.Low,
+                $"{ToPrettyString(user)} took {ToPrettyString(args.Item)} out of {ToPrettyString(uid)}.");
 
             _audioSystem.PlayPvs(component.SoundRemoveItem, uid, AudioParamsInsertRemove);
 
@@ -581,17 +581,17 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
     private void OnScoopVat(EntityUid uid, DeepFryerComponent component, DeepFryerScoopVatMessage args)
     {
-        var user = args.Session.AttachedEntity;
+        var user = args.Actor;
 
         if (user == null ||
-            !TryGetActiveHandSolutionContainer(uid, user.Value, out var heldItem, out var heldSolution,
+            !TryGetActiveHandSolutionContainer(uid, user, out var heldItem, out var heldSolution,
                 out var transferAmount))
             return;
 
         if (!_solutionContainerSystem.TryGetSolution(component.Owner, component.Solution.Name, out var solution))
             return;
 
-        _solutionTransferSystem.Transfer(user.Value,
+        _solutionTransferSystem.Transfer(user,
             uid,
             solution.Value,
             heldItem.Value,
@@ -603,10 +603,9 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
     private void OnClearSlagStart(EntityUid uid, DeepFryerComponent component, DeepFryerClearSlagMessage args)
     {
-        var user = args.Session.AttachedEntity;
+        var user = args.Actor;
 
-        if (user == null ||
-            !TryGetActiveHandSolutionContainer(uid, user.Value, out var heldItem, out var heldSolution,
+        if (!TryGetActiveHandSolutionContainer(uid, user, out var heldItem, out var heldSolution,
                 out var transferAmount))
             return;
 
@@ -616,21 +615,20 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
             _popupSystem.PopupEntity(
                 Loc.GetString("deep-fryer-oil-no-slag"),
                 uid,
-                user.Value);
+                user);
 
             return;
         }
 
-        var delay = Math.Clamp((float) wasteVolume * 0.1f, 1f, 5f);
+        var delay = TimeSpan.FromSeconds(Math.Clamp((float) wasteVolume * 0.1f, 1f, 5f));
 
         var ev = new ClearSlagDoAfterEvent(heldSolution.Value.Comp.Solution, transferAmount);
 
         //JJ Comment - not sure I have DoAfterArgs configured correctly.
-        var doAfterArgs = new DoAfterArgs(EntityManager, user.Value, delay, ev, uid, uid, heldItem)
+        var doAfterArgs = new DoAfterArgs(EntityManager, user, delay, ev, uid, uid, heldItem)
         {
             BreakOnDamage = true,
-            BreakOnTargetMove = true,
-            BreakOnUserMove = true,
+            BreakOnMove = true,
             MovementThreshold = 0.25f,
             NeedHand = true
         };
@@ -638,6 +636,7 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
         _doAfterSystem.TryStartDoAfter(doAfterArgs);
     }
 
+    [Obsolete("Obsolete")]
     private void OnRemoveAllItems(EntityUid uid, DeepFryerComponent component, DeepFryerRemoveAllItemsMessage args)
     {
         if (component.Storage.ContainedEntities.Count == 0)
@@ -645,13 +644,10 @@ public sealed partial class DeepFryerSystem : SharedDeepfryerSystem
 
         _containerSystem.EmptyContainer(component.Storage);
 
-        var user = args.Session.AttachedEntity;
+        var user = args.Actor;
 
-        if (user != null)
-        {
-            _adminLogManager.Add(LogType.Action, LogImpact.Low,
-                $"{ToPrettyString(user.Value)} removed all items from {ToPrettyString(uid)}.");
-        }
+        _adminLogManager.Add(LogType.Action, LogImpact.Low,
+            $"{ToPrettyString(user)} removed all items from {ToPrettyString(uid)}.");
 
         _audioSystem.PlayPvs(component.SoundRemoveItem, uid, AudioParamsInsertRemove);
 

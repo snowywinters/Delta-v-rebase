@@ -1,174 +1,82 @@
+﻿using Content.Server.Carrying;
 using Content.Server.DoAfter;
+using Content.Server.Item;
+using Content.Server.Popups;
 using Content.Server.Storage.EntitySystems;
+using Content.Shared.Bed.Sleep;
 using Content.Shared.DoAfter;
-using Content.Shared.Hands;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Item;
 using Content.Shared.Item.PseudoItem;
+using Content.Shared.Nyanotrasen.Item.PseudoItem;
 using Content.Shared.Storage;
 using Content.Shared.Tag;
 using Content.Shared.Verbs;
-using Robust.Shared.Containers;
 
-namespace Content.Server.Item.PseudoItem;
+namespace Content.Server.Nyanotrasen.Item.PseudoItem;
 
-public sealed class PseudoItemSystem : EntitySystem
+public sealed class PseudoItemSystem : SharedPseudoItemSystem
 {
-    // [Dependency] private readonly StorageSystem _storageSystem = default!;
-    // [Dependency] private readonly ItemSystem _itemSystem = default!;
-    // [Dependency] private readonly DoAfterSystem _doAfter = default!;
-    // [Dependency] private readonly TagSystem _tagSystem = default!;
-    //
-    // [ValidatePrototypeId<TagPrototype>]
-    // private const string PreventTag = "PreventLabel";
-    //
-    // public override void Initialize()
-    // {
-    //     base.Initialize();
-    //     SubscribeLocalEvent<PseudoItemComponent, GetVerbsEvent<InnateVerb>>(AddInsertVerb);
-    //     SubscribeLocalEvent<PseudoItemComponent, GetVerbsEvent<AlternativeVerb>>(AddInsertAltVerb);
-    //     SubscribeLocalEvent<PseudoItemComponent, EntGotRemovedFromContainerMessage>(OnEntRemoved);
-    //     SubscribeLocalEvent<PseudoItemComponent, GettingPickedUpAttemptEvent>(OnGettingPickedUpAttempt);
-    //     SubscribeLocalEvent<PseudoItemComponent, DropAttemptEvent>(OnDropAttempt);
-    //     SubscribeLocalEvent<PseudoItemComponent, PseudoItemInsertDoAfterEvent>(OnDoAfter);
-    //     SubscribeLocalEvent<PseudoItemComponent, ContainerGettingInsertedAttemptEvent>(OnInsertAttempt);
-    // }
-    //
-    // private void AddInsertVerb(EntityUid uid, PseudoItemComponent component, GetVerbsEvent<InnateVerb> args)
-    // {
-    //     if (!args.CanInteract || !args.CanAccess)
-    //         return;
-    //
-    //     if (component.Active)
-    //         return;
-    //
-    //     if (!TryComp<StorageComponent>(args.Target, out var targetStorage))
-    //         return;
-    //
-    //     if (component.Size > targetStorage.StorageCapacityMax - targetStorage.StorageUsed)
-    //         return;
-    //
-    //     if (Transform(args.Target).ParentUid == uid)
-    //         return;
-    //
-    //     InnateVerb verb = new()
-    //     {
-    //         Act = () =>
-    //         {
-    //             TryInsert(args.Target, uid, component, targetStorage);
-    //         },
-    //         Text = Loc.GetString("action-name-insert-self"),
-    //         Priority = 2
-    //     };
-    //     args.Verbs.Add(verb);
-    // }
-    //
-    // private void AddInsertAltVerb(EntityUid uid, PseudoItemComponent component, GetVerbsEvent<AlternativeVerb> args)
-    // {
-    //     if (!args.CanInteract || !args.CanAccess)
-    //         return;
-    //
-    //     if (args.User == args.Target)
-    //         return;
-    //
-    //     if (args.Hands == null)
-    //         return;
-    //
-    //     if (!TryComp<StorageComponent>(args.Hands.ActiveHandEntity, out var targetStorage))
-    //         return;
-    //
-    //     AlternativeVerb verb = new()
-    //     {
-    //         Act = () =>
-    //         {
-    //             StartInsertDoAfter(args.User, uid, args.Hands.ActiveHandEntity.Value, component);
-    //         },
-    //         Text = Loc.GetString("action-name-insert-other", ("target", Identity.Entity(args.Target, EntityManager))),
-    //         Priority = 2
-    //     };
-    //     args.Verbs.Add(verb);
-    // }
-    //
-    // private void OnEntRemoved(EntityUid uid, PseudoItemComponent component, EntGotRemovedFromContainerMessage args)
-    // {
-    //     if (!component.Active)
-    //         return;
-    //
-    //     RemComp<ItemComponent>(uid);
-    //     component.Active = false;
-    // }
-    //
-    // private void OnGettingPickedUpAttempt(EntityUid uid, PseudoItemComponent component,
-    //     GettingPickedUpAttemptEvent args)
-    // {
-    //     if (args.User == args.Item)
-    //         return;
-    //
-    //     Transform(uid).AttachToGridOrMap();
-    //     args.Cancel();
-    // }
-    //
-    // private void OnDropAttempt(EntityUid uid, PseudoItemComponent component, DropAttemptEvent args)
-    // {
-    //     if (component.Active)
-    //         args.Cancel();
-    // }
-    //
-    // private void OnDoAfter(EntityUid uid, PseudoItemComponent component, DoAfterEvent args)
-    // {
-    //     if (args.Handled || args.Cancelled || args.Args.Used == null)
-    //         return;
-    //
-    //     args.Handled = TryInsert(args.Args.Used.Value, uid, component);
-    // }
-    //
-    // public bool TryInsert(EntityUid storageUid, EntityUid toInsert, PseudoItemComponent component,
-    //     StorageComponent? storage = null)
-    // {
-    //     if (!Resolve(storageUid, ref storage))
-    //         return false;
-    //
-    //     if (component.Size > storage.StorageCapacityMax - storage.StorageUsed)
-    //         return false;
-    //
-    //     var item = EnsureComp<ItemComponent>(toInsert);
-    //     _tagSystem.TryAddTag(toInsert, PreventTag);
-    //     _itemSystem.SetSize(toInsert, component.Size, item);
-    //
-    //     if (!_storageSystem.Insert(storageUid, toInsert, out _, null, storage))
-    //     {
-    //         component.Active = false;
-    //         RemComp<ItemComponent>(toInsert);
-    //         return false;
-    //     }
-    //
-    //     component.Active = true;
-    //     return true;
-    // }
-    //
-    // private void StartInsertDoAfter(EntityUid inserter, EntityUid toInsert, EntityUid storageEntity,
-    //     PseudoItemComponent? pseudoItem = null)
-    // {
-    //     if (!Resolve(toInsert, ref pseudoItem))
-    //         return;
-    //
-    //     var ev = new PseudoItemInsertDoAfterEvent();
-    //     var args = new DoAfterArgs(EntityManager, inserter, 5f, ev, toInsert, toInsert, storageEntity)
-    //     {
-    //         BreakOnTargetMove = true,
-    //         BreakOnUserMove = true,
-    //         NeedHand = true
-    //     };
-    //
-    //     _doAfter.TryStartDoAfter(args);
-    // }
-    //
-    // private void OnInsertAttempt(EntityUid uid, PseudoItemComponent component,
-    //     ContainerGettingInsertedAttemptEvent args)
-    // {
-    //     if (!component.Active)
-    //         return;
-    //     // This hopefully shouldn't trigger, but this is a failsafe just in case so we dont bluespace them cats
-    //     args.Cancel();
-    // }
+    [Dependency] private readonly StorageSystem _storage = default!;
+    [Dependency] private readonly ItemSystem _item = default!;
+    [Dependency] private readonly DoAfterSystem _doAfter = default!;
+    [Dependency] private readonly CarryingSystem _carrying = default!;
+    [Dependency] private readonly PopupSystem _popup = default!;
+
+    public override void Initialize()
+    {
+        base.Initialize();
+        SubscribeLocalEvent<PseudoItemComponent, GetVerbsEvent<AlternativeVerb>>(AddInsertAltVerb);
+        SubscribeLocalEvent<PseudoItemComponent, TryingToSleepEvent>(OnTrySleeping);
+    }
+
+    private void AddInsertAltVerb(EntityUid uid, PseudoItemComponent component, GetVerbsEvent<AlternativeVerb> args)
+    {
+        if (!args.CanInteract || !args.CanAccess)
+            return;
+
+        if (component.Active)
+            return;
+
+        if (!TryComp<StorageComponent>(args.Using, out var targetStorage))
+            return;
+
+        if (!CheckItemFits((uid, component), (args.Using.Value, targetStorage)))
+            return;
+
+        if (args.Hands?.ActiveHandEntity == null)
+            return;
+
+        AlternativeVerb verb = new()
+        {
+            Act = () =>
+            {
+                StartInsertDoAfter(args.User, uid, args.Hands.ActiveHandEntity.Value, component);
+            },
+            Text = Loc.GetString("action-name-insert-other", ("target", Identity.Entity(args.Target, EntityManager))),
+            Priority = 2
+        };
+        args.Verbs.Add(verb);
+    }
+
+    protected override void OnGettingPickedUpAttempt(EntityUid uid, PseudoItemComponent component, GettingPickedUpAttemptEvent args)
+    {
+        // Try to pick the entity up instead first
+        if (args.User != args.Item && _carrying.TryCarry(args.User, uid))
+        {
+            args.Cancel();
+            return;
+        }
+
+        // If could not pick up, just take it out onto the ground as per default
+        base.OnGettingPickedUpAttempt(uid, component, args);
+    }
+
+    // Show a popup when a pseudo-item falls asleep inside a bag.
+    private void OnTrySleeping(EntityUid uid, PseudoItemComponent component, TryingToSleepEvent args)
+    {
+        var parent = Transform(uid).ParentUid;
+        if (!HasComp<SleepingComponent>(uid) && parent is { Valid: true } && HasComp<AllowsSleepInsideComponent>(parent))
+            _popup.PopupEntity(Loc.GetString("popup-sleep-in-bag", ("entity", uid)), uid);
+    }
 }

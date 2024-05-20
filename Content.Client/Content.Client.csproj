@@ -2,7 +2,7 @@
   <PropertyGroup>
     <!-- Work around https://github.com/dotnet/project-system/issues/4314 -->
     <TargetFramework>$(TargetFramework)</TargetFramework>
-    <LangVersion>11</LangVersion>
+    <LangVersion>12</LangVersion>
     <IsPackable>false</IsPackable>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <OutputPath>..\bin\Content.Client\</OutputPath>
@@ -25,6 +25,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Spawners\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Lobby\UI\LobbyCharacterPreviewPanel.cs" />
   </ItemGroup>
   <Import Project="..\RobustToolbox\MSBuild\Robust.Properties.targets" />
   <Import Project="..\RobustToolbox\MSBuild\XamlIL.targets" />
